@@ -26,9 +26,10 @@ RUN_ID_PLAIN_RE = re.compile(r"^\d{14}$")        # 20251026170002
 
 # Stable CSV schema for students
 CSV_COLUMNS = [
-    "post_id", "run_id", "scraped_at",
-    "price", "year", "make", "model", "mileage",
-    "source_txt"
+    "post_id", "run_id", "scraped_at", "price", "year", "make", "model", "mileage",
+    "source_txt",
+    "trim", "body_type", "drivetrain", "transmission", "fuel_type", "exterior_color",
+    "title_status", "condition", "leather_seats", "city",
 ]
 
 def _list_run_ids(bucket: str, structured_prefix: str) -> list[str]:
@@ -47,7 +48,7 @@ def _list_run_ids(bucket: str, structured_prefix: str) -> list[str]:
 def _jsonl_records_for_run(bucket: str, structured_prefix: str, run_id: str):
     """Yield dict records from .jsonl under .../run_id=<run_id>/jsonl/ (one JSON per file)."""
     b = storage_client.bucket(bucket)
-    prefix = f"{structured_prefix}/run_id={run_id}/jsonl/"
+    prefix = f"{structured_prefix}/run_id={run_id}/jsonl_llm/"
     for blob in b.list_blobs(prefix=prefix):
         if not blob.name.endswith(".jsonl"):
             continue
